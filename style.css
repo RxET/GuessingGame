@@ -1,0 +1,76 @@
+    <style>
+      
+      ul {
+        /*list-style-type: none;*/
+        padding: 0;
+        list-style-type:none;        
+      }
+      
+      img {
+        /*display: inline-block;*/
+        max-width: 50%;
+        height: auto;
+        float: left;
+      }
+
+      .floating-box {
+        display:inline-block;
+        /*height: 75px;*/
+        width: 33%;
+        margin: auto;
+      }
+
+      h4 {
+        display: inline;
+      }
+
+      #footer {
+/*        display: inline-block;*/
+        width: 100%;
+        height: 10%;
+        border-top: solid 1px grey;
+        background-color: white;
+        margin-bottom: 5%;
+        position: fixed;
+        bottom: 0;
+      }
+
+      #headers {
+/*        text-align: center;*/
+        width: 100%;
+        top: 0;
+        margin-bottom: 10px;
+        border-bottom: solid 1px grey;
+      }
+
+      #main {
+/*        text-align: center;*/
+      }
+
+      #app {
+        /*text-align: center;*/
+      }   
+
+      #guesses {
+      }   
+
+      .guess {
+        display: inline-block;    
+        border: solid 1px grey;
+        border-radius: 5px;
+        font-size: 35px;
+        margin: 5px;
+        padding: 0 15px;
+        /*border-spacing: 5px;    */
+        list-style-type: none;
+      }
+
+      .center {
+        text-align: center;
+
+/*        margin: auto;
+        width: 50%;
+        padding: 10px;*/
+      }
+
+    </style>
