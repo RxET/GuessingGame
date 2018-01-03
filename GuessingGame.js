@@ -14,6 +14,11 @@ function generateWinningNumber () {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+Game.prototype.provideHint = function () {
+  var hints = [this.winningNumber, generateWinningNumber(), generateWinningNumber()];
+  return shuffle(hints);
+}
+
 /* Use Durstenfeld Shuffle instead? */
 //Fisher-Yates Shuffle
 function shuffle (arr) {
@@ -42,10 +47,12 @@ Game.prototype.isLower = function () {
   }
 
 Game.prototype.playersGuessSubmission = function (num) {
-  if (num < 1 || num > 100 || typeof(num) !== "number") {
+  if (num < 1 || num > 100 || typeof(num) !== "number" || !num ) {
     throw 'That is an invalid guess.';
   }
   this.playersGuess = num;
+  // console.log("Guess is: "+num);
+  // console.log("Type of guess is: "+typeof(num));
   return this.checkGuess(this.playersGuess);
 }
 
@@ -53,6 +60,7 @@ Game.prototype.checkGuess = function (guess) {
   // console.log('Guess is: '+guess);
   // console.log(this.winningNumber);
   if (guess === this.winningNumber) {
+    this.pastGuesses.push(guess);
     return 'You Win!';
   } 
 
@@ -67,67 +75,71 @@ Game.prototype.checkGuess = function (guess) {
         return 'You Lose.'
       }
       else {
-        if (this.difference() < 10) return 'You\'re burning up!';
-        else if (this.difference() < 25) return 'You\'re lukewarm.';
-        else if (this.difference() < 50) return 'You\'re a bit chilly.';
-        else return 'You\'re ice cold!';
+        if (this.difference() < 10) {
+          $('.center').addClass("hot");
+          return 'You\'re burning up!'; 
+        }
+        else if (this.difference() < 25) {
+          $('.center').addClass("warm");
+          return 'You\'re lukewarm.';
+        }
+        else if (this.difference() < 50) {
+          $('.center').addClass("chilly");          
+          return 'You\'re a bit chilly.';
+        }
+        else {
+          $('.center').addClass("cold");
+          return 'You\'re ice cold!';
         }
       }
     }
   return 'How did you get here?'
-}
-
-Game.prototype.provideHint = function () {
-	var hints = [this.winningNumber, generateWinningNumber(), generateWinningNumber()];
-	return shuffle(hints);
+  }
 }
 
 function makeAGuess(currentGame) {
   var thisGuess = $('#player-input').val();
-  var output = currentGame.playersGuessSubmission(parseInt(thisGuess, 10))
-  console.log(output);
+  thisGuess = (parseInt(thisGuess));
+  // console.log("Guess is: "+thisGuess);
+  // console.log("Type of guess is: "+typeof(thisGuess));
+  // var output = currentGame.playersGuessSubmission(parseInt(thisGuess, 10))
+  var output = currentGame.playersGuessSubmission(thisGuess);
+  // console.log(output);
   $('#title').text(output);
   if (output !== 'You have already guessed that number.') {
-    return $('#player-input').val();
-      $('#player-input').val('#');
-  }
-  return output;
     $('#player-input').val('#');
+    return thisGuess;
+  }
+  $('#player-input').val('#');
+  return output;
 }
-
-
 
 $( document ).ready(function() {
 
   var currentGame = new Game();
 
-  $('#submit').on('click', function(e) {
+  function guessHandler (game) {
     var next = makeAGuess(currentGame);
     if (next !== 'You have already guessed that number.') {
-      $('.guess').text(next);
+      $('#guess-list li:nth-child('+currentGame.pastGuesses.length +')').text(next);
     }
-    console.log(currentGame.pastGuesses.length);
-    if (currentGame.pastGuesses.length === 5) {
+    if (next === currentGame.winningNumber || currentGame.pastGuesses.length === 5) {
       $('#hint, #submit').prop("disabled",true);
       $('#subtitle').text("Click start over to play again!");
     }
+  }
+
+  $('#submit').on('click', function(e) {
+    guessHandler(currentGame);
   });
 
   $('#player-input').keypress(function(event){
     if (event.which == 13 ) {
-      var next = makeAGuess(currentGame);
-    if (next !== 'You have already guessed that number.') {
-      $('.guess').text(next);
-    }
-    if (currentGame.pastGuesses.length === 5) {
-      $('#hint, #submit').prop("disabled",true);
-      $('#subtitle').text("Click start over to play again!");
-    }
+      guessHandler(currentGame);
     }
   });
 
   $('#reset').on('click', function(e) {
-
     currentGame = new Game();
     $('#hint, #submit').prop("disabled",false);
     $('#subtitle').text('What\'s in the box?');
@@ -136,8 +148,10 @@ $( document ).ready(function() {
   });
 
   $('#hint').on('click', function(e) {
-    console.log('Hint is: ');
-    console.log(currentGame.provideHint);
-    $('#title').text(currentGame.provideHint());
+    // console.log('Hint is: ');
+    // console.log(currentGame.provideHint);
+    // console.log(currentGame.provideHint().join(" "));
+    $('#hint').prop('disabled',true);    
+    $('#subtitle').text(currentGame.provideHint().join(", "));
   });
 });
