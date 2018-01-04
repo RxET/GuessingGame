@@ -3,25 +3,27 @@
   <head>
     <title>Guessing Game</title>
     <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>    
   </head>
   <body>
 
       <div id='app' class='center'>
 
         <div id='headers'>
-          <h1 id='title'>What's in the box?</h1>
+          <h1 id='title'>What's in the bubble?</h1>
           <h2 id='subtitle'>Pick a number between 1 and 100</h2>
         </div>
 
         <div id='main'>
           <div id='input-parent'>
-            <button id='submit'>Maybe it's...</button>
+            <button id='submit' class="btn btn-default">Go!</button>
             <input id='player-input' placeholder="#" maxlength="3" autofocus="autofocus"></input>
           </div>
 
           <div id='guesses'>
-            <h3>You guessed</h3>
+            <h3>You've guessed</h3>
               <ul id='guess-list'>
                 <li class='guess'>-</li>
                 <li class='guess'>-</li>
@@ -32,8 +34,8 @@
           </div>
 
           <div id="menu-btns">
-            <button id='reset'>Start over</button>
-            <button id='hint'>Gimmie a hint</button>
+            <button id='reset' class="btn btn-default">Reset</button>
+            <button id='hint' class="btn btn-default">Hint?</button>
           </div>
         </div>
       </div>
@@ -42,15 +44,15 @@
 
     <div id='footer' class='center'>
         <div>
-          <div class='floating-box'>
+          <div class='col-xs-4 col-md-4' id='fullstack'>
             <img src='fa-logo@2x.png'></img>
           </div>
 
-          <div class='floating-box'>
-            <h4>a Roxie project</h4>
+          <div class='col-xs-4 col-md-4' id='RxET'>
+            <h4>RxET</h4>
           </div>
 
-          <div class='floating-box'>
+          <div class='col-xs-4 col-md-4' id='gracehopper'>
             <img src='grace_hopper_academy.png'></img>
           </div>
 

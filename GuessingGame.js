@@ -2,6 +2,7 @@ var Game = function (){
   this.playersGuess = null;
   this.pastGuesses = [];
   this.winningNumber = generateWinningNumber();
+  this.lastDifference = 0;
 }
 
 function newGame () {
@@ -19,8 +20,7 @@ Game.prototype.provideHint = function () {
   return shuffle(hints);
 }
 
-/* Use Durstenfeld Shuffle instead? */
-//Fisher-Yates Shuffle
+/* Fisher-Yates Shuffle - look up Durstenfeld Shuffle */
 function shuffle (arr) {
   var count = arr.length; 
   var temp;
@@ -39,6 +39,7 @@ function shuffle (arr) {
 }
 
 Game.prototype.difference = function () {
+  this.lastDifference = (this.playersGuess-this.winningNumber);
   return Math.abs(this.playersGuess-this.winningNumber);
 }
 
@@ -57,6 +58,7 @@ Game.prototype.playersGuessSubmission = function (num) {
 }
 
 Game.prototype.checkGuess = function (guess) {
+  // debugger;
   // console.log('Guess is: '+guess);
   // console.log(this.winningNumber);
   if (guess === this.winningNumber) {
@@ -76,24 +78,36 @@ Game.prototype.checkGuess = function (guess) {
       }
       else {
         if (this.difference() < 10) {
-          $('.center').addClass("hot");
+          animatedBackground('hot');
           return 'You\'re burning up!'; 
         }
         else if (this.difference() < 25) {
-          $('.center').addClass("warm");
+          animatedBackground('warm');
           return 'You\'re lukewarm.';
         }
         else if (this.difference() < 50) {
-          $('.center').addClass("chilly");          
+          animatedBackground('chilly');
           return 'You\'re a bit chilly.';
         }
         else {
-          $('.center').addClass("cold");
+          animatedBackground('cold');
           return 'You\'re ice cold!';
         }
       }
     }
   return 'How did you get here?'
+  }
+}
+
+function animatedBackground (color) {
+// if it has color, but not the same color, 
+// turn off the current one and turn on the new one
+  if($('body').hasClass(color)) {
+    return;
+  } else {
+    //$('body').switchClass(color);
+    $('body').removeClass();
+    $('body').addClass(color);    
   }
 }
 
@@ -125,10 +139,11 @@ $( document ).ready(function() {
     }
     if (next === currentGame.winningNumber || currentGame.pastGuesses.length === 5) {
       $('#hint, #submit').prop("disabled",true);
-      $('#subtitle').text("Click start over to play again!");
+      $('#reset').text("Play again?");
     }
   }
 
+/* Handle clicks and button behavior below */
   $('#submit').on('click', function(e) {
     guessHandler(currentGame);
   });
@@ -139,19 +154,19 @@ $( document ).ready(function() {
     }
   });
 
-  $('#reset').on('click', function(e) {
-    currentGame = new Game();
-    $('#hint, #submit').prop("disabled",false);
-    $('#subtitle').text('What\'s in the box?');
-    $('#title').text('Pick a number between 1 and 100');
-    $('.guess').text('-');
-  });
-
   $('#hint').on('click', function(e) {
     // console.log('Hint is: ');
     // console.log(currentGame.provideHint);
     // console.log(currentGame.provideHint().join(" "));
     $('#hint').prop('disabled',true);    
     $('#subtitle').text(currentGame.provideHint().join(", "));
+  });
+
+  $('#reset').on('click', function(e) {
+    currentGame = new Game();
+    $('#hint, #submit').prop("disabled",false);
+    $('#subtitle').text('What\'s in the box?');
+    $('#title').text('Pick a number between 1 and 100');
+    $('.guess').text('-');
   });
 });
